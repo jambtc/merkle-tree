@@ -3,7 +3,7 @@
 namespace app\components;
 
 /**
- * Merkle Tree Calculator
+ * Merkle Root Calculator
  * 
  * Author: Sergio Casizzone
  * Date: 03.05.2023
@@ -11,37 +11,19 @@ namespace app\components;
 
 use yii\base\Component;
 
-class MerkleTree extends Component
+class MerkleRoot extends Component
 {
-    private $merkle_tree;
-
     /**
-     * Class constructor
-     */
-    public function __construct()
-    {
-        $this->merkle_tree = [];
-    }
-
-    /**
-     * Class destructor (do cleanup)
-     */
-    public function __destruct()
-    {
-        $this->merkle_tree = null;
-    }
-
-    /**
-     * Calcola il Merkle Tree
+     * Calcola il Merkle Root
      * 
-     * La funzione calcola il Merkle Tree a partire dai dati passati come argomento, utilizzando 
+     * La funzione calcola il Merkle Root a partire dai dati passati come argomento, utilizzando 
      * la funzione hash SHA256 per calcolare gli hash dei singoli elementi e degli hash intermedi. 
      * Viene restituito il Merkle Root, ovvero l'hash della radice del Merkle Tree.
      * 
      * @param array $data Array di hash
      * @return string Merkle root
      */
-    public function tree(array $data): string
+    public function root(array $data): string
     {
         // Se il numero di elementi è dispari, duplica l'ultimo elemento
         if (count($data) % 2 != 0) {
@@ -50,28 +32,28 @@ class MerkleTree extends Component
 
         // Calcola gli hash dei singoli elementi
         foreach ($data as $element) {
-            $this->merkle_tree[] = hash('sha256', $element);
+            $merkle_tree[] = hash('sha256', $element);
         }
 
         // Calcola gli hash intermedi
-        while (count($this->merkle_tree) > 1) {
+        while (count($merkle_tree) > 1) {
             $level = [];
-            for ($i = 0; $i < count($this->merkle_tree); $i += 2) {
-                $left = $this->merkle_tree[$i];
-                $right = isset($this->merkle_tree[$i + 1]) ? $this->merkle_tree[$i + 1] : $left;
+            for ($i = 0; $i < count($merkle_tree); $i += 2) {
+                $left = $merkle_tree[$i];
+                $right = isset($merkle_tree[$i + 1]) ? $merkle_tree[$i + 1] : $left;
                 $level[] = hash('sha256', $left . $right);
             }
-            $this->merkle_tree = $level;
+            $merkle_tree = $level;
         }
 
-        return $this->merkle_tree[0];
+        return $merkle_tree[0];
     }
 
     /**
-     * Verifica il Merkle Tree
+     * Verifica il Merkle Root
      * 
      * La funzione verifica se i dati passati come argomento corrispondono al Merkle Root passato 
-     * come secondo argomento. La funzione utilizza la funzione tree per calcolare il Merkle Root 
+     * come secondo argomento. La funzione utilizza la funzione root per calcolare il Merkle Root 
      * e restituisce true se il Merkle Root calcolato corrisponde a quello passato come argomento.
      * 
      * @param array $data Array di hash
@@ -80,6 +62,6 @@ class MerkleTree extends Component
      */
     public function verify(array $data, string $root): boolean
     {
-        return ($this->tree($data) === $root);
+        return ($this->root($data) === $root);
     }
 }
