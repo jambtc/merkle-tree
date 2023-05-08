@@ -60,7 +60,7 @@ class MerkleRoot extends Component
      * @param array $root merkle root
      * @return boolean 
      */
-    public function verify(array $data, string $root): boolean
+    public function verify(array $data, string $root): bool
     {
         return ($this->root($data) === $root);
     }
