@@ -7,11 +7,12 @@ namespace app\components;
  * 
  * Author: Sergio Casizzone
  * Date: 03.05.2023
+ * Descrizione: Calcolo e Verifica del merkle root
  */
 
 use yii\base\Component;
 
-class MerkleRoot extends Component
+class MerkleRootCalculator extends Component
 {
     /**
      * Calcola il Merkle Root
